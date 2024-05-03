@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_widget/fade_animation.dart';
+import 'package:flutter_widget/filter_data_from_api.dart';
 import 'package:flutter_widget/swipe_button_animation.dart';
 
 void main() {
@@ -20,7 +21,8 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       //home: FadeAnimationFoysal(),
-      home: SwipeButtonAnimationFoysal(),
+      //home: SwipeButtonAnimationFoysal(),
+      home: FilterDataFromApi(),
     );
   }
 }
