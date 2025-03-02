@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 
 class FilterDataFromApi extends StatefulWidget {
@@ -13,7 +14,7 @@ class FilterDataFromApi extends StatefulWidget {
 
 class _FilterDataFromApiState extends State<FilterDataFromApi> {
 
-  List<Products> productList = [];
+  List<dynamic> productList = [];
   // List<Products> myList(List<Products> list){
   //   for(var element in list){
   //     if(element.rating! > 4.5){
@@ -23,28 +24,29 @@ class _FilterDataFromApiState extends State<FilterDataFromApi> {
   //   return productList;
   // }
 
-  void filterData() {
+  void filterData() async{
     print("cse");
-   var response =  ApiServices().getProductList();
+   var response = await ApiServices().getProductList();
     print("cse1");
    print("response:"+ response.toString());
      // for(var data in response as List<ProductListClass>){
      //      if(data.products != null){
      //        productList.addAll(data.products as Iterable<Products>);
+     //        print("KIreiBD: "+ productList.toString() );
      //      }
      // }
-    for(var data in response as List<ProductListClass>){
-      productList.add(response["products"]);
-
-    }
-    //productList.add(response[ïndex][""])
+    productList.addAll(response["products"]);
+    // print("joarder:"+ productList.map((e){
+    //   print(e.title);
+    // } ).toString());
+    print("191:"+productList.toString());
   }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    filterData();
+    //filterData();
   }
 
   @override
@@ -54,36 +56,84 @@ class _FilterDataFromApiState extends State<FilterDataFromApi> {
         title: Text("Data Filtering From API"),
         centerTitle: true,
       ),
-      body: ListView.builder(
-                  shrinkWrap: true,
-          reverse: false,
-          scrollDirection: Axis.vertical,
-          itemCount: response["products"].length,
-        itemCount: 10,
-          itemBuilder: (context, index){
-        return Container(
-          height: double.infinity,
-          width: double.infinity,
-          color: Colors.grey,
-          // child: ListTile(
-          //   title: Text(productList[index].title.toString(),
-          //   style: TextStyle(
-          //     color: Colors.black,
-          //     fontSize: 20,
-          //     fontWeight: FontWeight.w800,
-          //   ),
-          //   ),
-          //   subtitle: Text(productList[index].title.toString(),
-          //     style: TextStyle(
-          //       color: Colors.black,
-          //       fontSize: 15,
-          //       fontWeight: FontWeight.w500,
-          //     ),
-          //   ),
-          ),
-        );
-            },
-              ),
+      body: SingleChildScrollView(
+        // child: ListView.builder(
+        //    shrinkWrap: true,
+        //     reverse: false,
+        //     scrollDirection: Axis.vertical,
+        //     itemCount: productList.length,
+        //   //itemCount: 10,
+        //     itemBuilder: (context, index){
+        //   return Container(
+        //     height: 200,
+        //     width: double.infinity,
+        //     color: Colors.grey,
+        //     child: ListTile(
+        //       title: Text(productList[index].title.toString(),
+        //       style: TextStyle(
+        //         color: Colors.black,
+        //         fontSize: 20,
+        //         fontWeight: FontWeight.w800,
+        //       ),
+        //       ),
+        //       subtitle: Text(productList[index].title.toString(),
+        //         style: TextStyle(
+        //           color: Colors.black,
+        //           fontSize: 15,
+        //           fontWeight: FontWeight.w500,
+        //         ),
+        //       ),
+        //     ),
+        //   );
+        //       },
+        //         ),
+        scrollDirection: Axis.vertical,
+        child: FutureBuilder(
+            future: ApiServices().getProductList(),
+            builder: (context, AsyncSnapshot snapshot){
+              if(snapshot.hasError){
+                return Text("Something went wrong");
+              }else if(snapshot.connectionState == ConnectionState.waiting){
+                return Text("Loading");
+              } else if(!snapshot.hasData){
+                return Text("No data found");
+              } else {
+                // return Container(
+                //     height: 200,
+                //   width: double.infinity,
+                //   decoration: BoxDecoration(
+                //     color: Colors.grey,
+                //     borderRadius: BorderRadius.circular(15),
+                //   ),
+                //   child: Column(
+                //     children: [
+                //       Text("${data[index]}"),
+                //     ],
+                //   ),
+                // );
+                return ListView.builder(
+                  itemCount: snapshot.data.length,
+                    itemBuilder: (context, index){
+                      return Container(
+                          height: 700,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.grey,
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Column(
+                          children: [
+                            Text("${snapshot.data["products"][index]["id"]}"),
+                            Text("${snapshot.data["products"][index]["title"]}"),
+                          ],
+                        ),
+                      );
+                    }
+                );
+              }
+            }
+        ),
+      ),
     );
   }
 }
@@ -101,9 +151,9 @@ class ApiServices{
       //print(response.body);
       if(response.statusCode == 200){
         print("foysal");
-        return jsonDecode(response.body);
+        //var data = jsonDecode(response.body);
       }
-      print("joarder");
+     return jsonDecode(response.body);
   }
 
   // Future<dynamic> getProductList() async{

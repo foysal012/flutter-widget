@@ -16,26 +16,27 @@ class _FadeAnimationFoysalState extends State<FadeAnimationFoysal> {
     return  Scaffold(
 
       appBar: AppBar(
+
         centerTitle: true,
-        title: Text("Fade Animaition"),
+        title: const Text("Fade Animation"),
       ),
 
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("Here is container box for design",
+            const Text("Here is container box for design",
             style: TextStyle(
               fontSize: 20, color: Colors.blue,
             ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 15,
             ),
             Center(
               child: AnimatedOpacity(
                 opacity: _isVisibe ? 1.0 : 0.0,
-                duration: Duration(seconds: 1),
+                duration: const Duration(seconds: 1),
                 child: Container(
                   height: 200,
                   width: 200,
@@ -53,7 +54,7 @@ class _FadeAnimationFoysalState extends State<FadeAnimationFoysal> {
               _isVisibe = !_isVisibe;
             });
           },
-      child: Icon(Icons.add),
+      child: const Icon(Icons.add),
       ),
     );
   }
